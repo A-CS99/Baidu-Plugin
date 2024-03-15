@@ -1,0 +1,15 @@
+{
+  "name": "Baidu-Plugin",
+  "version": "1.0.0",
+  "description": "基于百度灵境矩阵的大模型能力插件",
+  "main": "index.js",
+  "repository": "https://github.com/A-CS99/Baidu-Plugin.git",
+  "author": "ACS99",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}
