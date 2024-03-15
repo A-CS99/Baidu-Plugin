@@ -1,5 +1,5 @@
 {
-  "name": "Baidu-Plugin",
+  "name": "baidu-plugin",
   "version": "1.0.0",
   "description": "基于百度灵境矩阵的大模型能力插件",
   "main": "index.js",
