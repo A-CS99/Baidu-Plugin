@@ -1,0 +1,20 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "MBTI性格测试",
+    "name_for_model": "mbti_test",
+    "description_for_human": "一款用于测试MBTI性格的插件，您可以通过回答一系列问题，来测试您的MBTI性格",
+    "description_for_model": "帮助用户测试MBTI性格，用户需要回答一系列问题，系统根据回答的问题给出MBTI性格测试结果",
+    "auth": {
+        "type": "none"
+    },
+    "api": {
+        "type": "openapi",
+        "url": "http://154.8.151.96/files/openapi.yaml"
+    },
+    "logo_url": "http://154.8.151.96/files/logo.jpg",
+    "contact_email": "a_csHjm@bupt.edu.cn",
+    "legal_info_url": "http://154.8.151.96/buptreasure",
+    "examples": {
+        "url": "http://154.8.151.96/files/example.yaml"
+    }
+}

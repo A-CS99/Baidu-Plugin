@@ -1,0 +1,215 @@
+openapi: 3.0.1
+info:
+  title: MBTI性格测试
+  description: "一款用于测试MBTI性格的插件，您可以通过回答一系列问题，来测试您的MBTI性格"
+  version: "v1"
+servers:
+  - url: http://154.8.151.96:80/baidu-plugin/
+    description: 开发环境
+paths:
+  /mbtis:
+    get:
+      operationId: getAllMbtis
+      summary: 获取十六种MBTI性格
+      description: 展示十六种MBTI性格类型的中英文名称
+      responses:
+        "200":
+          description: 成功获取十六种MBTI性格
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mbtisRes"
+  /start:
+    get:
+      operationId: startTest
+      summary: 开启新一轮MBTI性格测试
+      description: 若状态为"not_start"，使用此接口开启新一轮MBTI性格测试
+      responses:
+        "200":
+          description: 成功开启测试
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/startRes"
+  /ask:
+    post:
+      operationId: getQuestion
+      summary: 发起新一次提问
+      description: 若状态为"asking"，则使用该接口获取提问内容并向用户提问，直到状态为"resulting"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/askReq"
+      responses:
+        "200":
+          description: 成功获取提问内容
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/askRes"
+  /answer:
+    post:
+      operationId: processAnswer
+      summary: 处理用户回答
+      description: 若状态为"asking"，且用户对某类型问题作出评分，则需要使用此接口处理用户的回答并更新该类型分数
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/answerReq"
+      responses:
+        "200":
+          description: 成功处理回答
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/answerRes"
+        "201":
+          description: 回答完成，等待生成结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/answerRes"
+  /result:
+    post:
+      operationId: getResult
+      summary: 获取测试结果
+      description: 若状态为"resulting"，则说明提问结束，需要使用该接口生成最终MBTI测试结果
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/resultReq"
+      responses:
+        "200":
+          description: 成功生成测试结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/resultReq"
+components:
+  schemas:
+    mbtisRes:
+      type: object
+      properties:
+        state:
+          type: string
+        types:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              description:
+                type: string
+            required:
+              - id
+              - name
+              - description
+      required:
+        - state
+        - types
+    startRes:
+      type: object
+      properties:
+        state:
+          type: string
+        prompt:
+          type: string
+      required:
+        - state
+        - prompt
+    askReq:
+      type: object
+      properties:
+        type:
+          type: string
+        index:
+          type: integer
+      required:
+        - type
+        - index
+    askRes:
+      type: object
+      properties:
+        state:
+          type: string
+        question:
+          type: string
+        next:
+          type: object
+          properties:
+            state:
+              type: string
+            type:
+              type: string
+            index:
+              type: integer
+          required:
+            - type
+            - index
+            - state
+      required:
+        - state
+        - question
+        - next
+    answerReq:
+      type: object
+      properties:
+        type:
+          type: string
+        index:
+          type: integer
+        prevScore:
+          type: integer
+        score:
+          type: integer
+      required:
+        - type
+        - index
+        - prevScore
+        - score
+    answerRes:
+      type: object
+      properties:
+        state:
+          type: string
+        type:
+          type: string
+        score:
+          type: integer
+      required:
+        - state
+        - type
+        - score
+    resultReq:
+      type: object
+      properties:
+        answers:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              score:
+                type: integer
+            required:
+              - type
+              - score
+      required:
+        - answers
+    resultRes:
+      type: object
+      properties:
+        state:
+          type: string
+        result:
+          type: string
+      required:
+        - state
+        - result

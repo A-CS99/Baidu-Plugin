@@ -1,0 +1,133 @@
+version: 0.0.1
+examples:
+    - context: # 对话历史
+          - role: user
+            content: 请问有哪些MBTI性格类型
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: getAllMbtis
+                # 思考过程，对触发有帮助
+                thoughts: 这是一个想了解MBTI种类的需求
+    - context: # 对话历史
+          - role: user
+            content: 我想测试自己的MBTI性格
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: startTest
+                # 思考过程，对触发有帮助
+                thoughts: 这是一个用户想测试自己MBTI性格的需求
+    - context: # 对话历史
+          - role: user
+            content: 我想开始测试
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: startTest
+                # 思考过程，对触发有帮助
+                thoughts: 这是一个用户想测试自己MBTI性格的需求
+    - context: # 对话历史
+          - role: user
+            content: 我想开始测试
+          - role: bot
+            content: 感谢您参与MBTI性格测试, 接下来请您结合自身经历, 诚实地针对以下对您的描述做出评分
+          - role: user
+            content: 好的，请开始提问
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: getQuestion
+                # 思考过程，对触发有帮助
+                thoughts: 接下来要进行测试, 需要向用户提问, 先从EI类的第一个问题问起
+                requestArguments:
+                  type: EI
+                  index: 0
+    - context: # 对话历史
+          - role: user
+            content: 5分
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: getQuestion
+                # 思考过程，对触发有帮助
+                thoughts: 用户针对上一个问题进行了评分，并且测试还没结束，需要继续提问。上一次提问了EI类的第一个，根据EI -> NS -> TF -> JP的顺序，这一次应该问NS类的第一个问题
+                requestArguments:
+                  type: NS
+                  index: 0
+    - context: # 对话历史
+          - role: user
+            content: "-3"
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: getQuestion
+                # 思考过程，对触发有帮助
+                thoughts: 用户针对上一个问题进行了评分，并且测试还没结束，需要继续提问。上一次提问了JP类的第一个，根据EI -> NS -> TF -> JP的顺序，这一次应该问EI类的第二个问题
+                requestArguments:
+                  type: EI
+                  index: 1
+    - context: # 对话历史
+          - role: user
+            content: 5分
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: processAnswer
+                # 思考过程，对触发有帮助
+                thoughts: 用户针对上一个问题进行了评分，需要将回答进行记录和处理。提问的是EI类的第一个，所以是EI类首次提问，没有上一次EI类的评分则看作0分，这一次的评分是5分，这些都需要记录。
+                requestArguments:
+                  type: EI
+                  index: 0
+                  prevScore: 0
+                  score: 5
+    - context: # 对话历史
+          - role: user
+            content: -2分
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: processAnswer
+                # 思考过程，对触发有帮助
+                thoughts: 用户针对上一个问题进行了评分，需要将回答进行记录和处理。提问的是EI类的第三个，上一次EI类的评分是3分，这一次的评分是-2分，这些都需要记录。
+                requestArguments:
+                  type: EI
+                  index: 2
+                  prevScore: 3
+                  score: -2
+    - context: # 对话历史
+          - role: user
+            content: 3分
+          - role: bot
+              # 触发插件
+            plugin:
+                # 应当触发的接口operationId
+                operationId: getResult
+                # 思考过程，对触发有帮助
+                thoughts: 用户回答了最后一个问题，收到processAnswer的状态为resulting，因此需要获取当前得分对应的MBTI测试结果。
+                requestArguments:
+                  answers:
+                    - type: EI
+                      score: -1
+                    - type: NS
+                      score: -2
+                    - type: TF
+                      score: 3
+                    - type: JP
+                      score: -4
+    - context: # 对话历史
+          - role: user
+            content: 什么是MBTI
+          - role: bot
+              # 触发插件
+            plugin:
+                # 思考过程，对触发有帮助
+                thoughts: 这是用户想要了解MBTI的相关信息, 不需要上面的工具
